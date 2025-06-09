@@ -9,8 +9,166 @@ from kivy.graphics import Color, RoundedRectangle
 from kivy.properties import ListProperty, NumericProperty
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-
+import requests
+from geopy.geocoders import Nominatim
 Window.clearcolor = (0.08, 0.08, 0.08, 1)
+
+
+
+##########################
+#Локальные функции
+##########################
+def get_location_by_ip():
+    response = requests.get('https://ipinfo.io/json').json()
+    return {
+        #'city': response.get('city'),
+        #'region': response.get('region'),
+        #'country': response.get('country'),
+        'coords': response.get('loc')  # Широта,долгота (например, "59.93,30.31")
+    }
+
+#Функция для преобразования координат в полный адресс
+def reveal_adress(cd1:float,cd2:float):
+    geolocator = Nominatim(user_agent="my_app")
+    location = geolocator.reverse(f"{str(cd1)},{str(cd2)}")
+    return location.address
+c = reveal_adress(55.751244,37.618423)
+print("Testing Addreses")
+print(c)
+
+
+# Функции для нахождения различных мест по ключевым словам
+
+
+
+
+
+
+def find_cafe(lat, lon, radius=500, amenity='cafe'):
+    """
+    Ищет места по типу (кафе, бар и т.д.) в радиусе от заданных координат.
+    Возвращает список словарей с названиями и координатами.
+    Формат вывода: [{'name': '...', 'lat': ..., 'lon': ...}, ...]
+    """
+    query = f"""
+    [out:json];
+    node["amenity"="{amenity}"](around:{radius},{lat},{lon});
+    out body;
+    """
+    
+    try:
+        response = requests.post(
+            'https://overpass-api.de/api/interpreter',
+            data={'data': query},
+            timeout=10
+        )
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка запроса: {e}")
+        if hasattr(e, 'response') and e.response:
+            print(f"Тело ответа сервера: {e.response.text[:200]}")  # Логируем начало ошибки
+        return []
+
+    places = []
+    for element in data.get('elements', []):
+        if element['type'] == 'node':
+            name = element.get('tags', {}).get('name', 'Без названия')
+            places.append({
+                'name': name,
+                'lat': element.get('lat'),
+                'lon': element.get('lon')
+            })
+    
+    return places
+
+
+    
+
+
+
+  
+
+def find_restaurant(lat, lon, radius=1000, amenity='restaurant'):
+    """
+    Ищет места по типу (кафе, бар и т.д.) в радиусе от заданных координат.
+    Возвращает список словарей с названиями и координатами.
+    Формат вывода: [{'name': '...', 'lat': ..., 'lon': ...}, ...]
+    """
+    query = f"""
+    [out:json];
+    node["amenity"="{amenity}"](around:{radius},{lat},{lon});
+    out body;
+    """
+    
+    try:
+        response = requests.post(
+            'https://overpass-api.de/api/interpreter',
+            data={'data': query},
+            timeout=10
+        )
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка запроса: {e}")
+        if hasattr(e, 'response') and e.response:
+            print(f"Тело ответа сервера: {e.response.text[:200]}")  # Логируем начало ошибки
+        return []
+
+    places = []
+    for element in data.get('elements', []):
+        if element['type'] == 'node':
+            name = element.get('tags', {}).get('name', 'Без названия')
+            places.append({
+                'name': name,
+                'lat': element.get('lat'),
+                'lon': element.get('lon')
+            })
+    
+    return places
+
+
+def find_events(lat, lon, radius=1000, amenity='nightclub'):
+    """
+    Ищет места по типу (кафе, бар и т.д.) в радиусе от заданных координат.
+    Возвращает список словарей с названиями и координатами.
+    Формат вывода: [{'name': '...', 'lat': ..., 'lon': ...}, ...]
+    """
+    query = f"""
+    [out:json];
+    node["amenity"="{amenity}"](around:{radius},{lat},{lon});
+    out body;
+    """
+    
+    try:
+        response = requests.post(
+            'https://overpass-api.de/api/interpreter',
+            data={'data': query},
+            timeout=10
+        )
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка запроса: {e}")
+        if hasattr(e, 'response') and e.response:
+            print(f"Тело ответа сервера: {e.response.text[:200]}")  # Логируем начало ошибки
+        return []
+
+    places = []
+    for element in data.get('elements', []):
+        if element['type'] == 'node':
+            name = element.get('tags', {}).get('name', 'Без названия')
+            places.append({
+                'name': name,
+                'lat': element.get('lat'),
+                'lon': element.get('lon')
+            })
+    
+    return places
+
+
+
+
 
 Builder.load_string('''
 <GradientPurpleButton>:
@@ -110,14 +268,23 @@ class ScreenMain(Screen):
     
     def show_text(self):
         print("Button is working OK")
-        self.manager.transition.direction = 'left'
-        self.manager.current = "lenpasword"
-        self.label.text = "Кнопка сработала успешно!"
+        #self.manager.transition.direction = 'left'
+        #self.manager.current = "lenpasword"
+        #self.label.text = "Кнопка сработала успешно!"
+        cords = get_location_by_ip()
+        c = cords['coords'].split(',')
+        places = find_cafe(c[0], c[1],1000)  
+        text = ""
+        for place in places:
+            text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n'
+        self.label.text = text    
+        print(text)
         Animation(
             color=[0.3, 0.9, 0.6, 1],
             d=0.5,
             t='out_elastic'
         ).start(self.label)
+        
 class Second(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
