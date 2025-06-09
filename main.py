@@ -23,16 +23,41 @@ def find(lat,lon,radius = 1500,amenity = ""):
     response = requests.post('https://overpass-api.de/api/interpreter', data=query)
     return response.json()
 
-def find_cafe(lat, lon, radius=500, amenity='cafe'):
+import requests
+
+def find_cafe_with_address(lat, lon, radius=500, amenity='cafe'):
     query = f"""
     [out:json];
     (
       node["amenity"="{amenity}"](around:{radius},{lat},{lon});
     );
     out body;
+    >;  # Получить связанные геоданные (например, здания)
+    out skel qt;
     """
-    response = requests.post('https://overpass-api.de/api/interpreter', data=query)
-    return response.json()
+    try:
+        response = requests.post('https://overpass-api.de/api/interpreter', data=query)
+        data = response.json()
+        cafes = []
+        for element in data.get('elements', []):
+            if element['type'] == 'node':
+                tags = element.get('tags', {})
+                address = {
+                    'name': tags.get('name', 'Название не указано'),
+                    'street': tags.get('addr:street'),
+                    'housenumber': tags.get('addr:housenumber'),
+                    'city': tags.get('addr:city'),
+                    'postcode': tags.get('addr:postcode'),
+                    'lat': element.get('lat'),
+                    'lon': element.get('lon')
+                }
+                cafes.append(address)
+        
+        return cafes
+    except Exception as e:
+        print(f"Error {e}")    
+    
+    
 
 
 
@@ -65,13 +90,14 @@ print(cords['coords'])
 c = cords['coords'].split(',')
     
 
-places = find_cafe(c[0], c[1])  
+places = find_cafe_with_address(c[0], c[1])  
 print("#############")
 print("CAFES:")
 print("#############")
-for place in places['elements']:
-    if place['tags'].get('name') is not None:
-        print(place['tags'].get('name'))    
+print(places)
+#for place in places['elements']:
+    #if place['tags'].get('name') is not None:
+        #print(place['tags'].get('name'))    
 
 places_music = find_restaurant(c[0],c[1])
 
