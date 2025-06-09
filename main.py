@@ -1,5 +1,5 @@
 import requests
-
+from geopy.geocoders import Nominatim
 
 def get_location_by_ip():
     response = requests.get('https://ipinfo.io/json').json()
@@ -11,7 +11,13 @@ def get_location_by_ip():
     }
 
 
-
+def reveal_adress(cd1:float,cd2:float):
+    geolocator = Nominatim(user_agent="my_app")
+    location = geolocator.reverse(f"{str(cd1)},{str(cd2)}")
+    return location.address
+c = reveal_adress(55.751244,37.618423)
+print("Testing Addreses")
+print(c)
 def find(lat,lon,radius = 1500,amenity = ""):
     query = f"""
     [out:json];
