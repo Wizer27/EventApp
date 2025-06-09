@@ -34,51 +34,45 @@ def find(lat,lon,radius = 1500,amenity = ""):
     response = requests.post('https://overpass-api.de/api/interpreter', data=query)
     return response.json()
 
-import requests
-
-def find_cafe_with_address(lat, lon, radius=500, amenity='cafe'):
+def find_cafe(lat, lon, radius=500, amenity='cafe'):
+    """
+    Ищет места по типу (кафе, бар и т.д.) в радиусе от заданных координат.
+    Возвращает список словарей с названиями и координатами.
+    Формат вывода: [{'name': '...', 'lat': ..., 'lon': ...}, ...]
+    """
     query = f"""
     [out:json];
-    (
-      node["amenity"="{amenity}"](around:{radius},{lat},{lon});
-    );
+    node["amenity"="{amenity}"](around:{radius},{lat},{lon});
     out body;
-    >;
-    out skel qt;
     """
     
     try:
         response = requests.post(
             'https://overpass-api.de/api/interpreter',
-            data=query,
-            timeout=10  # Таймаут на запрос
+            data={'data': query},
+            timeout=10
         )
-        response.raise_for_status()  # Проверить HTTP-ошибки
+        response.raise_for_status()
         data = response.json()
     except requests.exceptions.RequestException as e:
         print(f"Ошибка запроса: {e}")
+        if hasattr(e, 'response') and e.response:
+            print(f"Тело ответа сервера: {e.response.text[:200]}")  # Логируем начало ошибки
         return []
-    except ValueError as e:  # Если JSON битый
-        print(f"Ошибка парсинга JSON: {e}")
-        print(f"Ответ сервера: {response.text[:200]}")  # Логируем начало ответа
-        return []
-    
-    cafes = []
+
+    places = []
     for element in data.get('elements', []):
         if element['type'] == 'node':
-            tags = element.get('tags', {})
-            address = {
-                'name': tags.get('name', 'Название не указано'),
-                'street': tags.get('addr:street'),
-                'housenumber': tags.get('addr:housenumber'),
-                'city': tags.get('addr:city'),
-                'postcode': tags.get('addr:postcode'),
+            name = element.get('tags', {}).get('name', 'Без названия')
+            places.append({
+                'name': name,
                 'lat': element.get('lat'),
                 'lon': element.get('lon')
-            }
-            cafes.append(address)
+            })
     
-    return cafes
+    return places
+
+
     
 
 
@@ -111,14 +105,13 @@ cords = get_location_by_ip()
 c = cords['coords'].split(',')
     
 
-places = find_cafe_with_address(c[0], c[1])  
+places = find_cafe(c[0], c[1],1000)  
 print("#############")
 print("CAFES:")
 print("#############")
-print(places)
-#for place in places['elements']:
-    #if place['tags'].get('name') is not None:
-        #print(place['tags'].get('name'))    
+
+for place in places:
+    print(f"{place['name']} | Координаты: {place['lat']}, {place['lon']}")
 
 places_music = find_restaurant(c[0],c[1])
 
