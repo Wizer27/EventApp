@@ -12,6 +12,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import requests
 from geopy.geocoders import Nominatim
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.spinner import Spinner
 Window.clearcolor = (0.08, 0.08, 0.08, 1)
 
 
@@ -266,6 +267,14 @@ class ScreenMain(Screen):
             valign='top',   # Выравнивание по верху
             text_size=(Window.width - dp(80), None)  # Ширина текста с учетом padding
         )
+        spinner = Spinner(
+            text='Выберите пункт',
+            values=('Пункт 1', 'Пункт 2', 'Пункт 3'),
+            size_hint=(None, None),
+            size=(200, 44),
+            pos_hint={'center_x': 0.5}
+        )
+        spinner.bind(text=self.on_spinner_select)
         self.scroll_label.bind(
             texture_size=self.scroll_label.setter('size')  # Автоподстройка высоты
         )
@@ -273,11 +282,12 @@ class ScreenMain(Screen):
         
         self.button = GradientPurpleButton(text="НАЖМИ МЕНЯ")
         self.button.on_release_action = self.show_text
-        
+        layout.add_widget(spinner)
         layout.add_widget(scroll)
         layout.add_widget(self.button)
         self.add_widget(layout)
-    
+    def on_spinner_select(self, spinner, text):
+            print(f"Выбран: {text}")
     def show_text(self):
         print("Button is working OK")
         cords = get_location_by_ip()
