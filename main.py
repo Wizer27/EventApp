@@ -1,7 +1,6 @@
 import requests
 
 
-
 def get_location_by_ip():
     response = requests.get('https://ipinfo.io/json').json()
     return {
@@ -94,7 +93,6 @@ parks = find_events(c[0],c[1])
 for pr in parks['elements']:
     if pr['tags'].get('name') is not None:
         print(pr['tags'].get('name'))
-
 
 
 
