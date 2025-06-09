@@ -11,6 +11,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import requests
 from geopy.geocoders import Nominatim
+from kivy.uix.scrollview import ScrollView
 Window.clearcolor = (0.08, 0.08, 0.08, 1)
 
 
@@ -256,34 +257,36 @@ class ScreenMain(Screen):
             spacing=dp(30)
         )
         
-        self.label = DarkLabel(text="Нажмите на кнопку")
+        # Создаем ScrollView с Label внутри
+        scroll = ScrollView(size_hint=(1, 1))
+        self.scroll_label = DarkLabel(
+            text="Нажмите на кнопку", 
+            size_hint_y=None,
+            halign='left',  # Выравнивание по левому краю
+            valign='top',   # Выравнивание по верху
+            text_size=(Window.width - dp(80), None)  # Ширина текста с учетом padding
+        )
+        self.scroll_label.bind(
+            texture_size=self.scroll_label.setter('size')  # Автоподстройка высоты
+        )
+        scroll.add_widget(self.scroll_label)
         
         self.button = GradientPurpleButton(text="НАЖМИ МЕНЯ")
         self.button.on_release_action = self.show_text
         
-        layout.add_widget(self.label)
+        layout.add_widget(scroll)
         layout.add_widget(self.button)
         self.add_widget(layout)
     
-    
     def show_text(self):
         print("Button is working OK")
-        #self.manager.transition.direction = 'left'
-        #self.manager.current = "lenpasword"
-        #self.label.text = "Кнопка сработала успешно!"
         cords = get_location_by_ip()
         c = cords['coords'].split(',')
-        places = find_cafe(c[0], c[1],1000)  
+        places = find_cafe(c[0], c[1], 1000)  
         text = ""
         for place in places:
-            text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n'
-        self.label.text = text    
-        print(text)
-        Animation(
-            color=[0.3, 0.9, 0.6, 1],
-            d=0.5,
-            t='out_elastic'
-        ).start(self.label)
+            text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}\n"
+        self.scroll_label.text = text
         
 class Second(Screen):
     def __init__(self, **kwargs):
