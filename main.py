@@ -1,6 +1,8 @@
 import requests
 from geopy.geocoders import Nominatim
 
+
+#Берем аддрес исходя из IP через API
 def get_location_by_ip():
     response = requests.get('https://ipinfo.io/json').json()
     return {
@@ -10,7 +12,7 @@ def get_location_by_ip():
         'coords': response.get('loc')  # Широта,долгота (например, "59.93,30.31")
     }
 
-
+#Функция для преобразования координат в полный адресс
 def reveal_adress(cd1:float,cd2:float):
     geolocator = Nominatim(user_agent="my_app")
     location = geolocator.reverse(f"{str(cd1)},{str(cd2)}")
@@ -18,6 +20,9 @@ def reveal_adress(cd1:float,cd2:float):
 c = reveal_adress(55.751244,37.618423)
 print("Testing Addreses")
 print(c)
+
+
+# Функции для нахождения различных мест по ключевым словам
 def find(lat,lon,radius = 1500,amenity = ""):
     query = f"""
     [out:json];
@@ -101,9 +106,8 @@ def find_events(lat,lon,radius = 10000,amenity = "nightclub"):
     response = requests.post('https://overpass-api.de/api/interpreter', data=query)
     return response.json()  
 
-
-cords = get_location_by_ip()
-print(cords['coords'])  
+#Вывод мест в отсротированом порядке
+cords = get_location_by_ip() 
 c = cords['coords'].split(',')
     
 
