@@ -72,31 +72,84 @@ def find_cafe(lat, lon, radius=500, amenity='cafe'):
 
 
 
+  
 
-def find_restaurant(lat, lon, radius=500, amenity='restaurant'):
-    query = f"""    
-    [out:json];
-    (
-      node["amenity"="{amenity}"](around:{radius},{lat},{lon});
-    );
-    out body;
+def find_restaurant(lat, lon, radius=1000, amenity='restaurant'):
     """
-    response = requests.post('https://overpass-api.de/api/interpreter', data=query)
-    return response.json()    
-
-
-
-
-def find_events(lat,lon,radius = 10000,amenity = "nightclub"):
+    Ищет места по типу (кафе, бар и т.д.) в радиусе от заданных координат.
+    Возвращает список словарей с названиями и координатами.
+    Формат вывода: [{'name': '...', 'lat': ..., 'lon': ...}, ...]
+    """
     query = f"""
     [out:json];
-    (
-      node["amenity"="{amenity}"](around:{radius},{lat},{lon});
-    );
+    node["amenity"="{amenity}"](around:{radius},{lat},{lon});
     out body;
     """
-    response = requests.post('https://overpass-api.de/api/interpreter', data=query)
-    return response.json()  
+    
+    try:
+        response = requests.post(
+            'https://overpass-api.de/api/interpreter',
+            data={'data': query},
+            timeout=10
+        )
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка запроса: {e}")
+        if hasattr(e, 'response') and e.response:
+            print(f"Тело ответа сервера: {e.response.text[:200]}")  # Логируем начало ошибки
+        return []
+
+    places = []
+    for element in data.get('elements', []):
+        if element['type'] == 'node':
+            name = element.get('tags', {}).get('name', 'Без названия')
+            places.append({
+                'name': name,
+                'lat': element.get('lat'),
+                'lon': element.get('lon')
+            })
+    
+    return places
+
+
+def find_events(lat, lon, radius=1000, amenity='nightclub'):
+    """
+    Ищет места по типу (кафе, бар и т.д.) в радиусе от заданных координат.
+    Возвращает список словарей с названиями и координатами.
+    Формат вывода: [{'name': '...', 'lat': ..., 'lon': ...}, ...]
+    """
+    query = f"""
+    [out:json];
+    node["amenity"="{amenity}"](around:{radius},{lat},{lon});
+    out body;
+    """
+    
+    try:
+        response = requests.post(
+            'https://overpass-api.de/api/interpreter',
+            data={'data': query},
+            timeout=10
+        )
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка запроса: {e}")
+        if hasattr(e, 'response') and e.response:
+            print(f"Тело ответа сервера: {e.response.text[:200]}")  # Логируем начало ошибки
+        return []
+
+    places = []
+    for element in data.get('elements', []):
+        if element['type'] == 'node':
+            name = element.get('tags', {}).get('name', 'Без названия')
+            places.append({
+                'name': name,
+                'lat': element.get('lat'),
+                'lon': element.get('lon')
+            })
+    
+    return places
 
 #Вывод мест в отсротированом порядке
 cords = get_location_by_ip() 
@@ -119,18 +172,16 @@ print("RESTAURANTS:")
 print("#############")
 
 
-for mn in places_music['elements']:
-    if mn['tags'].get('name') is not None:
-        print(mn['tags'].get('name'))
+for place in places_music:
+    print(f"{place['name']} | Координаты: {place['lat']}, {place['lon']}")
 
 print("#############")
 print("EVENTS/CLUBS:")
 print("#############")
 
-parks = find_events(c[0],c[1])
-for pr in parks['elements']:
-    if pr['tags'].get('name') is not None:
-        print(pr['tags'].get('name'))
+parks = find_events(c[0],c[1],2000)
+for place in parks:
+    print(f"{place['name']} | Координаты: {place['lat']}, {place['lon']}")
 
 
 
