@@ -32,31 +32,42 @@ def find_cafe_with_address(lat, lon, radius=500, amenity='cafe'):
       node["amenity"="{amenity}"](around:{radius},{lat},{lon});
     );
     out body;
-    >;  # Получить связанные геоданные (например, здания)
+    >;
     out skel qt;
     """
-    try:
-        response = requests.post('https://overpass-api.de/api/interpreter', data=query)
-        data = response.json()
-        cafes = []
-        for element in data.get('elements', []):
-            if element['type'] == 'node':
-                tags = element.get('tags', {})
-                address = {
-                    'name': tags.get('name', 'Название не указано'),
-                    'street': tags.get('addr:street'),
-                    'housenumber': tags.get('addr:housenumber'),
-                    'city': tags.get('addr:city'),
-                    'postcode': tags.get('addr:postcode'),
-                    'lat': element.get('lat'),
-                    'lon': element.get('lon')
-                }
-                cafes.append(address)
-        
-        return cafes
-    except Exception as e:
-        print(f"Error {e}")    
     
+    try:
+        response = requests.post(
+            'https://overpass-api.de/api/interpreter',
+            data=query,
+            timeout=10  # Таймаут на запрос
+        )
+        response.raise_for_status()  # Проверить HTTP-ошибки
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка запроса: {e}")
+        return []
+    except ValueError as e:  # Если JSON битый
+        print(f"Ошибка парсинга JSON: {e}")
+        print(f"Ответ сервера: {response.text[:200]}")  # Логируем начало ответа
+        return []
+    
+    cafes = []
+    for element in data.get('elements', []):
+        if element['type'] == 'node':
+            tags = element.get('tags', {})
+            address = {
+                'name': tags.get('name', 'Название не указано'),
+                'street': tags.get('addr:street'),
+                'housenumber': tags.get('addr:housenumber'),
+                'city': tags.get('addr:city'),
+                'postcode': tags.get('addr:postcode'),
+                'lat': element.get('lat'),
+                'lon': element.get('lon')
+            }
+            cafes.append(address)
+    
+    return cafes
     
 
 
