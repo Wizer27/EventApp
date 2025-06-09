@@ -23,16 +23,11 @@ print(c)
 
 
 # Функции для нахождения различных мест по ключевым словам
-def find(lat,lon,radius = 1500,amenity = ""):
-    query = f"""
-    [out:json];
-    (
-      node["amenity"="{amenity}"](around:{radius},{lat},{lon});
-    );
-    out body;
-    """
-    response = requests.post('https://overpass-api.de/api/interpreter', data=query)
-    return response.json()
+
+
+
+
+
 
 def find_cafe(lat, lon, radius=500, amenity='cafe'):
     """
@@ -88,6 +83,9 @@ def find_restaurant(lat, lon, radius=500, amenity='restaurant'):
     """
     response = requests.post('https://overpass-api.de/api/interpreter', data=query)
     return response.json()    
+
+
+
 
 def find_events(lat,lon,radius = 10000,amenity = "nightclub"):
     query = f"""
