@@ -267,40 +267,50 @@ class ScreenMain(Screen):
             valign='top',   # Выравнивание по верху
             text_size=(Window.width - dp(80), None)  # Ширина текста с учетом padding
         )
-        spinner = Spinner(
+        self.spinner = Spinner(
             text='Выберите пункт',
-            values=('Пункт 1', 'Пункт 2', 'Пункт 3'),
+            values=('Рестораны', 'Клубы/Развлечения', 'Кафе/Перекусы'),
             size_hint=(None, None),
-            size=(200, 44),
+            size=(300, 200),
             pos_hint={'center_x': 0.5}
         )
-        spinner.bind(text=self.on_spinner_select)
+        self.spinner.bind(text=self.on_spinner_select)
         self.scroll_label.bind(
             texture_size=self.scroll_label.setter('size')  # Автоподстройка высоты
         )
         scroll.add_widget(self.scroll_label)
         
-        self.button = GradientPurpleButton(text="НАЖМИ МЕНЯ")
+        self.button = GradientPurpleButton(text="НАЙТИ")
         self.button.on_release_action = self.show_text
-        layout.add_widget(spinner)
+        layout.add_widget(self.spinner)
         layout.add_widget(scroll)
         layout.add_widget(self.button)
         self.add_widget(layout)
-    def on_spinner_select(self, spinner, text):
-            print(f"Выбран: {text}")
+    def on_spinner_select(self, spinner, text) -> str:
+        print(text)
+        return text
+            
     def show_text(self):
         print("Button is working OK")
         cords = get_location_by_ip()
         c = cords['coords'].split(',')
         places = find_cafe(c[0], c[1], 1000)  
         text = ""
-        text += "CAFES:" + '\n'
-        for place in places:
-            text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n'
-        places_music = find_restaurant(c[0],c[1])
-        text += "RESTAURANTS:" + '\n'
-        for place in places_music:
-            text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}"    
+        if self.spinner.text == "Кафе/Перекусы":
+            print("CAFE is working")
+            text += "CAFES:" + '\n'
+            for place in places:
+                text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n'
+        if self.spinner.text == "Рестораны":     
+            places_music = find_restaurant(c[0],c[1])
+            text += "RESTAURANTS:" + '\n'
+            for place in places_music:
+                text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n' 
+        if self.spinner.text == "Клубы/Развлечения":
+            parks = find_events(c[0],c[1],2000)
+            text += "CLUBS/EVENTS:" + '\n'
+            for place in parks:
+                text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n'
         self.scroll_label.text = text
         
 class Second(Screen):
