@@ -39,7 +39,7 @@ def find_cafe(lat, lon, radius=500, amenity='cafe'):
 
 
 def find_restaurant(lat, lon, radius=500, amenity='restaurant'):
-    query = f"""
+    query = f"""    
     [out:json];
     (
       node["amenity"="{amenity}"](around:{radius},{lat},{lon});
