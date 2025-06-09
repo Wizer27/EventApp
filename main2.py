@@ -284,8 +284,13 @@ class ScreenMain(Screen):
         c = cords['coords'].split(',')
         places = find_cafe(c[0], c[1], 1000)  
         text = ""
+        text += "CAFES:" + '\n'
         for place in places:
-            text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}\n"
+            text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n'
+        places_music = find_restaurant(c[0],c[1])
+        text += "RESTAURANTS:" + '\n'
+        for place in places_music:
+            text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}"    
         self.scroll_label.text = text
         
 class Second(Screen):
