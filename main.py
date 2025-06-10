@@ -182,20 +182,3 @@ print("#############")
 parks = find_events(c[0],c[1],2000)
 for place in parks:
     print(f"{place['name']} | Координаты: {place['lat']}, {place['lon']}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
