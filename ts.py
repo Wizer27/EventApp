@@ -17,8 +17,9 @@ class MapApp(App):
         
         # Добавляем маркер
         marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
+        marker2 = MapMarker(lat = 55.7523,lon = 37.616,source = "Images/mr2.png")
         mapview.add_marker(marker)
-        
+        mapview.add_marker(marker2)
         layout.add_widget(mapview)
         return layout
 

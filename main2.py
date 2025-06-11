@@ -13,6 +13,7 @@ import requests
 from geopy.geocoders import Nominatim
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.spinner import Spinner
+from kivy_garden.mapview import MapView, MapMarker 
 Window.clearcolor = (0.08, 0.08, 0.08, 1)
 
 
@@ -315,23 +316,40 @@ class ScreenMain(Screen):
             for place in parks:
                 text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n'
         self.scroll_label.text = text
+        return text
     def show_on_map(self):
-        print("Showing on map")   
+        print("Showing on map") 
+        self.manager.transition.direction = 'left'
+        self.manager.current = 'lenpasword'  
         
 class Second(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        boxlayout = BoxLayout(orientation="vertical", spacing=5, padding=[10])
+        boxlayout = BoxLayout(orientation="horizontal", spacing=5, padding=[10])
 
         button_new_pasword = Button(
-            text="Return",
+            text="<- Вернуться назад ",
             background_color=[2, 1.5, 3, 1],
             size_hint=[1, 0.1],
             on_press=self._on_press_button_new_pasword,
         )
-
+        mapview = MapView(
+            zoom=15,
+            lat=55.7522,
+            lon=37.6156,
+            size = (1,1)
+            
+        )
+        
+        # Добавляем маркер
         boxlayout.add_widget(button_new_pasword)
+        marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
+        marker2 = MapMarker(lat = 55.7523,lon = 37.616,source = "Images/mr2.png")
+        mapview.add_marker(marker)
+        mapview.add_marker(marker2)
+        boxlayout.add_widget(mapview)
+
         self.add_widget(boxlayout)
 
     def _on_press_button_new_pasword(self, *args):
