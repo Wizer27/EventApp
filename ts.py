@@ -8,13 +8,15 @@ class MapApp(App):
         
         # Создаем карту
         mapview = MapView(
-            zoom=12,
+            zoom=15,
             lat=55.7522,
-            lon=37.6156
+            lon=37.6156,
+            size = (1,1)
+            
         )
         
         # Добавляем маркер
-        marker = MapMarker(lat=55.7522, lon=37.6156, source="marker.png")
+        marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
         mapview.add_marker(marker)
         
         layout.add_widget(mapview)
