@@ -281,10 +281,13 @@ class ScreenMain(Screen):
         scroll.add_widget(self.scroll_label)
         
         self.button = GradientPurpleButton(text="НАЙТИ")
+        self.button2 = GradientPurpleButton(text = "Посмотреть на карте")
+        self.button2.on_release_action = self.show_on_map
         self.button.on_release_action = self.show_text
         layout.add_widget(self.spinner)
         layout.add_widget(scroll)
         layout.add_widget(self.button)
+        layout.add_widget(self.button2)
         self.add_widget(layout)
     def on_spinner_select(self, spinner, text) -> str:
         print(text)
@@ -312,6 +315,8 @@ class ScreenMain(Screen):
             for place in parks:
                 text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n'
         self.scroll_label.text = text
+    def show_on_map(self):
+        print("Showing on map")   
         
 class Second(Screen):
     def __init__(self, **kwargs):
