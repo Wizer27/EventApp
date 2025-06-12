@@ -13,7 +13,8 @@ import requests
 from geopy.geocoders import Nominatim
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.spinner import Spinner
-from kivy_garden.mapview import MapView, MapMarker 
+from kivy_garden.mapview import MapView, MapMarker
+from kivy.uix.textinput import TextInput 
 Window.clearcolor = (0.08, 0.08, 0.08, 1)
 
 
@@ -237,8 +238,7 @@ class GradientPurpleButton(Button):
         Animation(bg_color=[0.55, 0.2, 1.0, 1], d=0.3).start(self)
         Animation(width=self.size[0], height=self.size[1], d=0.3).start(self)
         if hasattr(self, 'on_release_action'):
-            self.on_release_action()
-
+            self.on_release_action()            
 class DarkLabel(Label):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -248,6 +248,113 @@ class DarkLabel(Label):
         self.valign = 'middle'
         self.size_hint_y = None
         self.height = dp(100)
+class Register(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.title = "Регистрация"
+        
+        # Основной контейнер с затемнением
+        main_box = BoxLayout(
+            orientation='vertical',
+            padding=dp(40),
+            spacing=dp(25),
+            pos_hint={'center_x': 0.5, 'center_y': 0.5},
+            size_hint=(0.9, 0.8)
+        )
+        # Заголовок
+        title = Label(
+            text="Создать аккаунт",
+            font_size=dp(24),
+            bold=True,
+            color=(0.9, 0.9, 0.9, 1),
+            size_hint=(1, None),
+            height=dp(40))
+        
+        # Контейнер для полей ввода
+        input_box = BoxLayout(
+            orientation='vertical',
+            spacing=dp(20),
+            size_hint=(1, None),
+            height=dp(220))
+        
+        # Стилизованные поля ввода
+        self.username = TextInput(
+            hint_text="Имя пользователя",
+            multiline=False,
+            size_hint=(1, None),
+            height=dp(50),
+            background_normal='',
+            background_active='',
+            foreground_color=[0.9, 0.9, 0.9, 1],
+            background_color=[0.12, 0.12, 0.12, 1],
+            padding=dp(15),
+            hint_text_color=[0.6, 0.6, 0.6, 1],
+            cursor_color=[0.9, 0.9, 0.9, 1],
+            cursor_width=dp(2))
+        
+        self.password = TextInput(
+            hint_text="Пароль",
+            multiline=False,
+            password=True,
+            size_hint=(1, None),
+            height=dp(50),
+            background_normal='',
+            background_active='',
+            foreground_color=[0.9, 0.9, 0.9, 1],
+            background_color=[0.12, 0.12, 0.12, 1],
+            padding=dp(15),
+            hint_text_color=[0.6, 0.6, 0.6, 1],
+            cursor_color=[0.9, 0.9, 0.9, 1],
+            cursor_width=dp(2))
+        
+        # Добавляем границы с закругленными углами
+        for field in [self.username, self.password]:
+            with field.canvas.before:
+                Color(0.45, 0.1, 0.9, 0.7)  # Фиолетовый цвет границы
+                field.rect = RoundedRectangle(
+                    size=(field.width, field.height),
+                    pos=field.pos,
+                    radius=[dp(10)])
+            field.bind(pos=self.update_field_rect, size=self.update_field_rect)
+        
+        # Кнопка подтверждения
+        self.conf = GradientPurpleButton(text="Подтвердить")
+        self.conf.on_release_action = self.print_logs
+        
+        # Ссылка на вход
+        login_link = Label(
+            text="Уже есть аккаунт? Войти",
+            font_size=dp(14),
+            color=[0.6, 0.6, 0.6, 1],
+            size_hint=(1, None),
+            height=dp(30))
+        login_link.bind(on_touch_down=self.switch_to_login)
+        
+        # Сборка интерфейса
+        input_box.add_widget(self.username)
+        input_box.add_widget(self.password)
+        
+        main_box.add_widget(title)
+        main_box.add_widget(input_box)
+        main_box.add_widget(self.conf)
+        main_box.add_widget(login_link)
+        
+        self.add_widget(main_box)
+    
+    def update_field_rect(self, instance, value):
+        instance.rect.pos = instance.pos
+        instance.rect.size = instance.size
+    
+    def print_logs(self):
+        print(f"Username: {self.username.text}")
+        print(f"Password: {self.password.text}")
+    
+    def switch_to_login(self, instance, touch):
+        if instance.collide_point(*touch.pos):
+            print("Переход к форме входа")
+            # Здесь можно добавить переход к экрану входа
+            # self.manager.current = 'login'
+            
 class ScreenMain(Screen):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
@@ -320,8 +427,8 @@ class ScreenMain(Screen):
     def show_on_map(self):
         print("Showing on map") 
         self.manager.transition.direction = 'left'
-        self.manager.current = 'lenpasword'  
-        
+        self.manager.current = 'lenpasword' 
+            
 class Second(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -341,8 +448,6 @@ class Second(Screen):
             size = (1,1)
             
         )
-        d = ScreenMain()
-        f = d.show_text()
         
         # Добавляем маркер
         boxlayout.add_widget(button_new_pasword)
@@ -357,13 +462,14 @@ class Second(Screen):
     def _on_press_button_new_pasword(self, *args):
         self.manager.transition.direction = 'right'
         self.manager.current = 'main_screen'
-   
 class Main(App):
     def build(self):
         sm = ScreenManager()
+        self.states = {}
+        sm.add_widget(Register(name = "register"))
         sm.add_widget(ScreenMain(name='main_screen'))
         sm.add_widget(Second(name='lenpasword'))
 
-        return sm
+        return sm    
 if __name__ == "__main__":
     Main().run()
