@@ -341,6 +341,8 @@ class Second(Screen):
             size = (1,1)
             
         )
+        d = ScreenMain()
+        f = d.show_text()
         
         # Добавляем маркер
         boxlayout.add_widget(button_new_pasword)
