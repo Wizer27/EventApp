@@ -346,6 +346,8 @@ class Register(Screen):
         instance.rect.size = instance.size
     
     def print_logs(self):
+        self.manager.transition.direction = 'right'
+        self.manager.current = 'main_screen'
         print(f"Username: {self.username.text}")
         print(f"Password: {self.password.text}")
     
