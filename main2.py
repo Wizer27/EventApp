@@ -414,7 +414,21 @@ class Register(Screen):
             hint_text_color=[0.6, 0.6, 0.6, 1],
             cursor_color=[0.9, 0.9, 0.9, 1],
             cursor_width=dp(2))
-        for field in [self.username, self.password]:
+        self.password2 = TextInput(
+            hint_text="Подтвердите пороль",
+            multiline=False,
+            password=True,
+            size_hint=(1, None),
+            height=dp(50),
+            background_normal='',
+            background_active='',
+            foreground_color=[0.9, 0.9, 0.9, 1],
+            background_color=[0.12, 0.12, 0.12, 1],
+            padding=dp(15),
+            hint_text_color=[0.6, 0.6, 0.6, 1],
+            cursor_color=[0.9, 0.9, 0.9, 1],
+            cursor_width=dp(2))
+        for field in [self.username, self.password,self.password2]:
             with field.canvas.before:
                 Color(0.45, 0.1, 0.9, 0.7)  # Фиолетовый цвет границы
                 field.rect = RoundedRectangle(
@@ -422,16 +436,24 @@ class Register(Screen):
                     pos=field.pos,
                     radius=[dp(10)])
             field.bind(pos=self.update_field_rect, size=self.update_field_rect)
+        self.conf = GradientPurpleButton(text = "Подтвердить")
+        self.conf.on_release_action = self.check  
         input_box.add_widget(self.username)
         input_box.add_widget(self.password)
+        input_box.add_widget(self.password2)
         
         main_box.add_widget(title)
         main_box.add_widget(input_box)
+        main_box.add_widget(self.conf)
         self.add_widget(main_box)
     def update_field_rect(self, instance, value):
         instance.rect.pos = instance.pos
         instance.rect.size = instance.size
-        
+    def check(self):
+        a = self.password.text
+        b = self.password2.text
+        if a != b:
+            print("Пороли не совпадают")
             
                
 class ScreenMain(Screen):
