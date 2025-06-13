@@ -248,10 +248,10 @@ class DarkLabel(Label):
         self.valign = 'middle'
         self.size_hint_y = None
         self.height = dp(100)
-class Register(Screen):
+class LogIn(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.title = "Регистрация"
+        self.title = "Вход в аккаунт"
         
         # Основной контейнер с затемнением
         main_box = BoxLayout(
@@ -323,7 +323,7 @@ class Register(Screen):
         
         # Ссылка на вход
         login_link = Label(
-            text="Уже есть аккаунт? Войти",
+            text="Нет аккаунта? Создать.",
             font_size=dp(14),
             color=[0.6, 0.6, 0.6, 1],
             size_hint=(1, None),
@@ -356,7 +356,84 @@ class Register(Screen):
             print("Переход к форме входа")
             # Здесь можно добавить переход к экрану входа
             # self.manager.current = 'login'
+            self.manager.transition.direction = 'left'
+            self.manager.current = 'register' 
+class Register(Screen):
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
+        self.title = "Регистрация"
+        main_box = BoxLayout(
+            orientation='vertical',
+            padding=dp(40),
+            spacing=dp(25),
+            pos_hint={'center_x': 0.5, 'center_y': 0.5},
+            size_hint=(0.9, 0.8)
+        )
+        # Заголовок
+        title = Label(
+            text="Создать аккаунт",
+            font_size=dp(24),
+            bold=True,
+            color=(0.9, 0.9, 0.9, 1),
+            size_hint=(1, None),
+            height=dp(40))
+        
+        # Контейнер для полей ввода
+        input_box = BoxLayout(
+            orientation='vertical',
+            spacing=dp(20),
+            size_hint=(1, None),
+            height=dp(220))
+        
+        # Стилизованные поля ввода
+        self.username = TextInput(
+            hint_text="Имя пользователя",
+            multiline=False,
+            size_hint=(1, None),
+            height=dp(50),
+            background_normal='',
+            background_active='',
+            foreground_color=[0.9, 0.9, 0.9, 1],
+            background_color=[0.12, 0.12, 0.12, 1],
+            padding=dp(15),
+            hint_text_color=[0.6, 0.6, 0.6, 1],
+            cursor_color=[0.9, 0.9, 0.9, 1],
+            cursor_width=dp(2))
+        
+        self.password = TextInput(
+            hint_text="Пароль",
+            multiline=False,
+            password=True,
+            size_hint=(1, None),
+            height=dp(50),
+            background_normal='',
+            background_active='',
+            foreground_color=[0.9, 0.9, 0.9, 1],
+            background_color=[0.12, 0.12, 0.12, 1],
+            padding=dp(15),
+            hint_text_color=[0.6, 0.6, 0.6, 1],
+            cursor_color=[0.9, 0.9, 0.9, 1],
+            cursor_width=dp(2))
+        for field in [self.username, self.password]:
+            with field.canvas.before:
+                Color(0.45, 0.1, 0.9, 0.7)  # Фиолетовый цвет границы
+                field.rect = RoundedRectangle(
+                    size=(field.width, field.height),
+                    pos=field.pos,
+                    radius=[dp(10)])
+            field.bind(pos=self.update_field_rect, size=self.update_field_rect)
+        input_box.add_widget(self.username)
+        input_box.add_widget(self.password)
+        
+        main_box.add_widget(title)
+        main_box.add_widget(input_box)
+        self.add_widget(main_box)
+    def update_field_rect(self, instance, value):
+        instance.rect.pos = instance.pos
+        instance.rect.size = instance.size
+        
             
+               
 class ScreenMain(Screen):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
@@ -468,6 +545,7 @@ class Main(App):
     def build(self):
         sm = ScreenManager()
         self.states = {}
+        sm.add_widget(LogIn(name = "login"))
         sm.add_widget(Register(name = "register"))
         sm.add_widget(ScreenMain(name='main_screen'))
         sm.add_widget(Second(name='lenpasword'))
