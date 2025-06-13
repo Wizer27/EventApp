@@ -380,10 +380,23 @@ class LogIn(Screen):
         instance.rect.size = instance.size
     
     def print_logs(self):
-        self.manager.transition.direction = 'right'
-        self.manager.current = 'main_screen'
+        with open('users.json','r') as file:
+            users = json.load(file)
+        try:
+            if self.username.text in users:    
+                if users[self.username.text] == hash_pass(self.password.text):
+                    show_success("Успешеый вход")    
+                    self.manager.transition.direction = 'right'
+                    self.manager.current = 'main_screen'
+                else:
+                    show_error("Неверные данные")  
+            else:
+                show_error("Такого пользователя не существует")          
+        except Exception as e:
+            show_error(f"Ошибка {e}")        
         print(f"Username: {self.username.text}")
         print(f"Password: {self.password.text}")
+        
     
     def switch_to_login(self, instance, touch):
         if instance.collide_point(*touch.pos):
@@ -492,16 +505,20 @@ class Register(Screen):
     def check(self):
         a = self.password.text
         b = self.password2.text
-        if a != b:
-            print("Пороли не совпадают")
-        else:
-            with open("users.json",'r') as file:
-                dt = json.load(file)    
-            if self.username.text not in dt:
-                dt[self.username.text] =  hash_pass(self.password.text)
-                with open("users.json",'w') as file:
-                    json.dump(dt,file,indent=2)  
-                show_success("Успешная регистрация")      
+        if a != '' and b != '':
+            if a != b:
+                print("Пороли не совпадают")
+                show_error("Пороли не совпадают")
+            else:
+                with open("users.json",'r') as file:
+                    dt = json.load(file)    
+                if self.username.text not in dt:
+                    dt[self.username.text] =  hash_pass(self.password.text)
+                    with open("users.json",'w') as file:
+                        json.dump(dt,file,indent=2)  
+                    show_success("Успешная регистрация") 
+                else:
+                    show_error("Такой пользователь уже есть")         
                     # сообщение о том что все хорошо
             
                
