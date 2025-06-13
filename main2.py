@@ -15,10 +15,42 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.spinner import Spinner
 from kivy_garden.mapview import MapView, MapMarker
 from kivy.uix.textinput import TextInput 
+from kivy.uix.modalview import ModalView
+from kivy.utils import get_color_from_hex
 import json
 from authorize import hash_pass
 Window.clearcolor = (0.08, 0.08, 0.08, 1)
 
+
+def show_error(text):
+    """Показать красное сообщение об ошибке"""
+    modal = ModalView(size_hint=(0.8, None), height=50)
+    error_label = Label(
+        text=text,
+        color=get_color_from_hex('#ffffff'),
+        bold=True,
+        halign='center',
+        valign='middle'
+    )
+    modal.background_color = get_color_from_hex('#ff4b4b')
+    modal.background = ''
+    modal.add_widget(error_label)
+    modal.open()
+
+def show_success(text):
+    """Показать зеленое сообщение об успехе"""
+    modal = ModalView(size_hint=(0.8, None), height=50)
+    success_label = Label(
+        text=text,
+        color=get_color_from_hex('#ffffff'),
+        bold=True,
+        halign='center',
+        valign='middle'
+    )
+    modal.background_color = get_color_from_hex('#4CAF50')
+    modal.background = ''
+    modal.add_widget(success_label)
+    modal.open()
 
 
 ##########################
@@ -468,7 +500,8 @@ class Register(Screen):
             if self.username.text not in dt:
                 dt[self.username.text] =  hash_pass(self.password.text)
                 with open("users.json",'w') as file:
-                    json.dump(dt,file,indent=2)    
+                    json.dump(dt,file,indent=2)  
+                show_success("Успешная регистрация")      
                     # сообщение о том что все хорошо
             
                
