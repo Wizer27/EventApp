@@ -438,6 +438,8 @@ class Register(Screen):
             field.bind(pos=self.update_field_rect, size=self.update_field_rect)
         self.conf = GradientPurpleButton(text = "Подтвердить")
         self.conf.on_release_action = self.check  
+        self.backd = GradientPurpleButton(text = "<- Назад ко входу")
+        self.backd.on_release_action = self.back
         input_box.add_widget(self.username)
         input_box.add_widget(self.password)
         input_box.add_widget(self.password2)
@@ -445,10 +447,14 @@ class Register(Screen):
         main_box.add_widget(title)
         main_box.add_widget(input_box)
         main_box.add_widget(self.conf)
+        main_box.add_widget(self.backd)
         self.add_widget(main_box)
     def update_field_rect(self, instance, value):
         instance.rect.pos = instance.pos
         instance.rect.size = instance.size
+    def back(self):
+        self.manager.transition.direction = 'right'
+        self.manager.current = 'login'   
     def check(self):
         a = self.password.text
         b = self.password2.text
