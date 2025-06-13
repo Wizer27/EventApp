@@ -15,6 +15,8 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.spinner import Spinner
 from kivy_garden.mapview import MapView, MapMarker
 from kivy.uix.textinput import TextInput 
+import json
+from authorize import hash_pass
 Window.clearcolor = (0.08, 0.08, 0.08, 1)
 
 
@@ -263,7 +265,7 @@ class LogIn(Screen):
         )
         # Заголовок
         title = Label(
-            text="Создать аккаунт",
+            text="Войти в аккаунт",
             font_size=dp(24),
             bold=True,
             color=(0.9, 0.9, 0.9, 1),
@@ -460,6 +462,13 @@ class Register(Screen):
         b = self.password2.text
         if a != b:
             print("Пороли не совпадают")
+        else:
+            with open("users.json",'r') as file:
+                dt = json.load(file)    
+            if self.username.text not in dt:
+                dt[self.username.text] =  hash_pass(self.password.text)
+                with open("users.json",'w') as file:
+                    json.dump(dt,file,indent=2)    
             
                
 class ScreenMain(Screen):
