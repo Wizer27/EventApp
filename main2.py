@@ -469,6 +469,7 @@ class Register(Screen):
                 dt[self.username.text] =  hash_pass(self.password.text)
                 with open("users.json",'w') as file:
                     json.dump(dt,file,indent=2)    
+                    # сообщение о том что все хорошо
             
                
 class ScreenMain(Screen):
