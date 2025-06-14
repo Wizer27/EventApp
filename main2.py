@@ -382,18 +382,21 @@ class LogIn(Screen):
     def print_logs(self):
         with open('users.json','r') as file:
             users = json.load(file)
-        try:
-            if self.username.text in users:    
-                if users[self.username.text] == hash_pass(self.password.text):
-                    show_success("Успешеый вход")    
-                    self.manager.transition.direction = 'right'
-                    self.manager.current = 'main_screen'
+        if self.username.text != '' or self.password.text != '':    
+            try:
+                if self.username.text in users:    
+                    if users[self.username.text] == hash_pass(self.password.text):
+                        show_success("Успешеый вход")    
+                        self.manager.transition.direction = 'right'
+                        self.manager.current = 'main_screen'
+                    else:
+                        show_error("Неверные данные")  
                 else:
-                    show_error("Неверные данные")  
-            else:
-                show_error("Такого пользователя не существует")          
-        except Exception as e:
-            show_error(f"Ошибка {e}")        
+                    show_error("Такого пользователя не существует")          
+            except Exception as e:
+                show_error(f"Ошибка {e}")   
+        else:
+            show_error("Заполните поля ввода")             
         print(f"Username: {self.username.text}")
         print(f"Password: {self.password.text}")
         
