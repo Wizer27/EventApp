@@ -409,7 +409,17 @@ class LogIn(Screen):
             # self.manager.current = 'login'
             self.manager.transition.direction = 'left'
             self.manager.current = 'register' 
-            
+art = """
+┌──────────────┐
+│  ┌─┐  ┌┐  ┌─┐ │
+│  │ │  │└┐ │  │ │
+│  └─┘  │ │ │─┘ │
+│       │ │ │   │
+│       └─┘ └─┘ │
+└──────────────┘
+
+"""    
+print(art)        
 class Register(Screen):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
