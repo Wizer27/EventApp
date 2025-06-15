@@ -272,7 +272,8 @@ class GradientPurpleButton(Button):
         Animation(bg_color=[0.55, 0.2, 1.0, 1], d=0.3).start(self)
         Animation(width=self.size[0], height=self.size[1], d=0.3).start(self)
         if hasattr(self, 'on_release_action'):
-            self.on_release_action()            
+            self.on_release_action()  
+                      
 class DarkLabel(Label):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -408,6 +409,7 @@ class LogIn(Screen):
             # self.manager.current = 'login'
             self.manager.transition.direction = 'left'
             self.manager.current = 'register' 
+            
 class Register(Screen):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
