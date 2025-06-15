@@ -19,6 +19,7 @@ from kivy.uix.modalview import ModalView
 from kivy.utils import get_color_from_hex
 import json
 from authorize import hash_pass
+import random
 Window.clearcolor = (0.08, 0.08, 0.08, 1)
 
 
@@ -605,6 +606,16 @@ class ScreenMain(Screen):
             for place in parks:
                 text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n'
         self.scroll_label.text = text
+        with open('places.json','r') as file:
+            data = json.load(file)
+        #######################
+        #ПРОСТО ЗАГЛУШКА НА САМОМ ДЕЛЕ ДОЛЖЕН БЫТЬ НОРМАЛЬНЫЙ КЛЮЧ, НО ЕГО НЕТ :(    
+        #######################
+        #FIXME:Нужно потом сделать когда отмечаем на карте места выполнить парсинг бд но так как нормального ключа текста тоесть юзернейма нет это сделать невозможно
+        c = random.randint(1,1000)
+        data[f"text №{str(c)}"] = text
+        with open("places.json",'w') as file:
+            json.dump(data,file,indent=2)
         return text
     def show_on_map(self):
         print("Showing on map") 
