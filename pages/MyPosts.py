@@ -83,7 +83,10 @@ post = st.text_input("Make a post",placeholder="Today i...")
 st.badge("Your posts")
 with open("pages/posts.json",'r') as file:
     ps = json.load(file)
+seen = []    
 for user in ps:
     if st.session_state.username == user["username"]:
         for i in user["posts"]:
-            print(i)   
+            if i not  in seen:
+                seen.append(i)
+print(seen)                 
