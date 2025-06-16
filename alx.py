@@ -82,9 +82,14 @@ st.success(f"✅ Welcome to Alexandria, {st.session_state.username}!")
 main_search = st.text_input("Search anything")
 with open("pages/posts.json",'r') as file:
         ps = json.load(file)
-ps.append({
-    "username":st.session_state.username,
-    "posts":[]
-})  
-with open("pages/posts.json","w") as file:
-    json.dump(ps,file,indent=2,ensure_ascii=False)      
+user_ex = False        
+for user in ps:
+    if user["username"] == st.session_state.username:
+        user_ex = True
+if not user_ex:                
+    ps.append({
+        "username":st.session_state.username,
+        "posts":[]
+    })  
+    with open("pages/posts.json","w") as file:
+        json.dump(ps,file,indent=2,ensure_ascii=False)      

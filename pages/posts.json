@@ -8,6 +8,10 @@
   },
   {
     "username": "lm",
-    "posts": []
+    "posts": [
+        "test1",
+        "test2",
+        "test3"
+    ]
   }
 ]

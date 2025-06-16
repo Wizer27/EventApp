@@ -80,3 +80,10 @@ if not st.session_state.logged_in:
 st.success(f"✅ Welcome to Alexandria, {st.session_state.username}!")        
 st.title(st.session_state.username)
 post = st.text_input("Make a post",placeholder="Today i...")
+st.badge("Your posts")
+with open("pages/posts.json",'r') as file:
+    ps = json.load(file)
+for user in ps:
+    if st.session_state.username == user["username"]:
+        for i in user["posts"]:
+            print(i)   
