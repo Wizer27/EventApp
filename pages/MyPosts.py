@@ -42,7 +42,6 @@ if not st.session_state.logged_in:
                     st.session_state.show_register = False
                     with open('user2.json','r', encoding="utf-8") as file:
                         data = json.load(file)
-                        
                     data[new_username] = hash_password(new_password) # записываем нового пользователя 
                     
                     
