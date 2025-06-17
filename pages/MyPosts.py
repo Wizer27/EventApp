@@ -108,3 +108,6 @@ for user in times:
             times2.append(j)              
 for post in range(len(seen)):           
     pss = st.text_area(f"Post{post},Time: {times2[post]}",seen[post])                
+
+    
+    

@@ -1,7 +1,7 @@
 import streamlit as st
 import json
 from author import hash_password,autor
-
+import random
 
 def register_user(username, password):
     if 'users' not in st.session_state:
@@ -93,3 +93,20 @@ if not user_ex:
     })  
     with open("pages/posts.json","w") as file:
         json.dump(ps,file,indent=2,ensure_ascii=False)      
+
+with open('pages/posts.json',"r") as file:
+    lenta = json.load(file)
+
+us = []
+us_post = []
+
+for user in lenta:
+    if user["username"] != "":
+        us.append(user["username"])
+        us_post.append(user["posts"])
+print(us)
+print(us_post)        
+for i in  range(len(list(set(us)))):
+    poststs = st.text_area(f"{us[i]} Posted",random.choice(us_post[i]))
+                           
+     
