@@ -107,6 +107,7 @@ for user in lenta:
 print(us)
 print(us_post)        
 for i in  range(len(list(set(us)))):
-    poststs = st.text_area(f"{us[i]} Posted",random.choice(us_post[i]))
+    st.badge(f"{us[i]} Posted")
+    poststs = st.text_area(" ",random.choice(us_post[i]))
                            
      
