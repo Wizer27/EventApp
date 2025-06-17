@@ -89,5 +89,12 @@ for user in ps:
         for i in user["posts"]:
             if i not  in seen:
                 seen.append(i)
+if post != "":
+    for i in ps:
+        if st.session_state.username == user["username"]:
+            user["posts"].append(post)
+    with open("pages/posts.json",'w') as file:
+        json.dump(ps,file,indent=2)        
+    seen.append(post)                
 for post in range(len(seen)):
     pss = st.text_area(f"Post{post}",seen[post])                
