@@ -89,4 +89,5 @@ for user in ps:
         for i in user["posts"]:
             if i not  in seen:
                 seen.append(i)
-print(seen)                 
+for post in range(len(seen)):
+    pss = st.text_area(f"Post{post}",seen[post])                
