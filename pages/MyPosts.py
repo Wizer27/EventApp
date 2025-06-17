@@ -98,6 +98,13 @@ if post != "":
             user["time"].append(f)
     with open("pages/posts.json",'w') as file:
         json.dump(ps,file,indent=2)        
-    seen.append(post)                
-for post in range(len(seen)):
-    pss = st.text_area(f"Post{post}",seen[post])                
+    seen.append(post)            
+with open('pages/posts.json','r') as file:
+    times = json.load(file)    
+times2 = []        
+for user in times:
+    if st.session_state.username == user["username"]:
+        for j in user["time"]:
+            times2.append(j)              
+for post in range(len(seen)):           
+    pss = st.text_area(f"Post{post},Time: {times2[post]}",seen[post])                
