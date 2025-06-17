@@ -131,7 +131,9 @@ for user in ps:
 if not user_ex:                
     ps.append({
         "username":st.session_state.username,
-        "posts":[]
+        "posts":[],
+        "time":[],
+        "titles":[]
     })  
     with open("pages/posts.json","w") as file:
         json.dump(ps,file,indent=2,ensure_ascii=False)      

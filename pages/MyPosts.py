@@ -79,23 +79,29 @@ if not st.session_state.logged_in:
 # Основной интерфейс после авторизации
 st.success(f"✅ Welcome to Alexandria, {st.session_state.username}!")        
 st.title(st.session_state.username)
+title = st.text_input("Title for the post",placeholder="Create a title")
 post = st.text_input("Make a post",placeholder="Today i...")
 st.badge("Your posts")
 with open("pages/posts.json",'r') as file:
     ps = json.load(file)
 seen = []    
+titles = []     
 for user in ps:
     if st.session_state.username == user["username"]:
         for i in user["posts"]:
             if i not  in seen:
                 seen.append(i)
+        for j in user["titles"]:
+            titles.append(j)                
 d = datetime.now()
-f = str(d).split()[0]                
+f = str(d).split()[0]           
 if post != "":
     for i in ps:
         if st.session_state.username == user["username"]:
             user["posts"].append(post)
             user["time"].append(f)
+            user["titles"].append(title)
+            
     with open("pages/posts.json",'w') as file:
         json.dump(ps,file,indent=2)        
     seen.append(post)            
@@ -105,8 +111,12 @@ times2 = []
 for user in times:
     if st.session_state.username == user["username"]:
         for j in user["time"]:
-            times2.append(j)              
-for post in range(len(seen)):           
+            times2.append(j)   
+print(f"Len of posts {list(set(seen))}")
+print(f"Len of titles {list(set(titles))}")   
+print(f"Len of times {list(set(times2))}")                    
+for post in range(len(list(set(seen)))):   
+    tit = st.text(list(set(titles))[post])        
     pss = st.text_area(f"Post{post},Time: {times2[post]}",seen[post])                
 
     
