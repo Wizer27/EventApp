@@ -80,6 +80,48 @@ if not st.session_state.logged_in:
 st.success(f"✅ Welcome to Alexandria, {st.session_state.username}!")        
 
 main_search = st.text_input("Search anything")
+
+
+def create_post(title, author, content, tags=None):
+    """
+    Создает красивый пост в Streamlit с заданными параметрами
+    
+    Параметры:
+    - title: заголовок поста
+    - author: автор поста
+    - content: содержание поста
+    - tags: список тегов (необязательный)
+    """
+    if tags is None:
+        tags = []
+    
+    st.markdown(f"""
+    <div style="
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+    ">
+        <h2 style="margin-top: 0; color: #2c3e50;">{title}</h2>
+        <div style="
+            color: #7f8c8d;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        ">
+            Автор: {author}
+        </div>
+        <p style="color: #34495e; line-height: 1.6;">{content}</p>
+        {f'<div style="margin-top: 15px;">' + 
+         ''.join([f'<span style="background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 12px; margin-right: 5px; font-size: 0.8em;">{tag}</span>' 
+                 for tag in tags]) + '</div>' if tags else ''}
+    </div>
+    """, unsafe_allow_html=True)
+    
+    
+    
+    
+    
 with open("pages/posts.json",'r') as file:
         ps = json.load(file)
 user_ex = False        
@@ -107,7 +149,8 @@ for user in lenta:
 print(us)
 print(us_post)        
 for i in  range(len(list(set(us)))):
-    st.badge(f"{us[i]} Posted")
-    poststs = st.text_area(" ",random.choice(us_post[i]))
+    #st.badge(f"{us[i]} Posted")
+    #poststs = st.text_area(" ",random.choice(us_post[i]))
+    create_post("Test",us[i],random.choice(us_post[i]),tags=None)
                            
      
