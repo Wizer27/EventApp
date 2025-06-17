@@ -9,13 +9,14 @@
   {
     "username": "lm",
     "posts": [
-      "test1",
-      "test2",
-      "test3",
-      "C++ coded",
-      "C++ coded",
-      "Walk with my dog",
-      "Walk with my dog"
+      "C++ code today",
+      "C++ code today",
+      "Walk with a dog",
+      "Walk with a dog"
+    ],
+    "time": [
+      "2025-06-17",
+      "2025-06-17"
     ]
   }
 ]

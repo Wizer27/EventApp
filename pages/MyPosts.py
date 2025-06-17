@@ -1,7 +1,7 @@
 import streamlit as st
 import json
 from author import hash_password,autor
-
+from datetime import datetime
 
 def register_user(username, password):
     if 'users' not in st.session_state:
@@ -89,10 +89,13 @@ for user in ps:
         for i in user["posts"]:
             if i not  in seen:
                 seen.append(i)
+d = datetime.now()
+f = str(d).split()[0]                
 if post != "":
     for i in ps:
         if st.session_state.username == user["username"]:
             user["posts"].append(post)
+            user["time"].append(f)
     with open("pages/posts.json",'w') as file:
         json.dump(ps,file,indent=2)        
     seen.append(post)                
