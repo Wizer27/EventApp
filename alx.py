@@ -152,14 +152,22 @@ for user in lenta:
 if main_search != "":
     with open("pages/posts.json",'r') as file:
         pos = json.load(file)
-                 
-print(us)
-print(us_post)        
-for i in  range(len(list(set(us)))):
-    #st.badge(f"{us[i]} Posted")
-    #poststs = st.text_area(" ",random.choice(us_post[i]))
-    a = random.choice(us_post[i])
-    b = us_post[i].index(a)
-    create_post(titles[i][b],us[i],a,tags=None)
+    for i in titles:
+            for j in  list(set(i)):
+                if j in main_search or main_search in j:
+                    for n in  range(len(list(set(us)))):
+                        a = us_post[n][i.index(j)]
+                        b = us[titles.index(i)]
+                        create_post(j,b,a,tags=None)     
+                  
+else:    
+    for i in  range(len(list(set(us)))):
+        #st.badge(f"{us[i]} Posted")
+        #poststs = st.text_area(" ",random.choice(us_post[i]))
+        a = random.choice(us_post[i])
+        b = us_post[i].index(a)
+        create_post(titles[i][b],us[i],a,tags=None)
                            
      
+print(us)
+print(us_post)   
