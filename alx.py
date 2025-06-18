@@ -143,16 +143,23 @@ with open('pages/posts.json',"r") as file:
 
 us = []
 us_post = []
-
+titles = []
 for user in lenta:
     if user["username"] != "":
         us.append(user["username"])
         us_post.append(user["posts"])
+        titles.append(user["titles"])
+if main_search != "":
+    with open("pages/posts.json",'r') as file:
+        pos = json.load(file)
+                 
 print(us)
 print(us_post)        
 for i in  range(len(list(set(us)))):
     #st.badge(f"{us[i]} Posted")
     #poststs = st.text_area(" ",random.choice(us_post[i]))
-    create_post("Test",us[i],random.choice(us_post[i]),tags=None)
+    a = random.choice(us_post[i])
+    b = us_post[i].index(a)
+    create_post(titles[i][b],us[i],a,tags=None)
                            
      
