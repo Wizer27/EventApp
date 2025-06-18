@@ -78,7 +78,50 @@ if not st.session_state.logged_in:
     st.stop()
 # Основной интерфейс после авторизации
 st.success(f"✅ Welcome to Alexandria, {st.session_state.username}!")        
+
+
+def create_post(title, author, content, tags=None):
+    """
+    Создает красивый пост в Streamlit с заданными параметрами
+    
+    Параметры:
+    - title: заголовок поста
+    - author: автор поста
+    - content: содержание поста
+    - tags: список тегов (необязательный)
+    """
+    if tags is None:
+        tags = []
+    
+    st.markdown(f"""
+    <div style="
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+    ">
+        <h2 style="margin-top: 0; color: #2c3e50;">{title}</h2>
+        <div style="
+            color: #7f8c8d;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        ">
+            Автор: {author}
+        </div>
+        <p style="color: #34495e; line-height: 1.6;">{content}</p>
+        {f'<div style="margin-top: 15px;">' + 
+         ''.join([f'<span style="background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 12px; margin-right: 5px; font-size: 0.8em;">{tag}</span>' 
+                 for tag in tags]) + '</div>' if tags else ''}
+    </div>
+    """, unsafe_allow_html=True)
+    
+    
+    
 st.title(st.session_state.username)
+
+
+
 title = st.text_input("Title for the post",placeholder="Create a title")
 post = st.text_input("Make a post",placeholder="Today i...")
 st.badge("Your posts")
@@ -116,8 +159,8 @@ print(f"Len of posts {list(set(seen))}")
 print(f"Len of titles {list(set(titles))}")   
 print(f"Len of times {list(set(times2))}")                    
 for post in range(len(list(set(seen)))):   
-    tit = st.text(list(set(titles))[post])        
-    pss = st.text_area(f"Post{post},Time: {times2[post]}",seen[post])                
-
+    #tit = st.text(list(set(titles))[post])        
+    #pss = st.text_area(f"Post{post},Time: {times2[post]}",seen[post])                
+    create_post(list(set(titles))[post],st.session_state.username,seen[post],tags = times2[post] )
     
     
