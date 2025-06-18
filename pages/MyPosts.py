@@ -3,6 +3,7 @@ import json
 from author import hash_password,autor
 from datetime import datetime
 
+
 def register_user(username, password):
     if 'users' not in st.session_state:
         st.session_state.users = {}
@@ -42,9 +43,9 @@ if not st.session_state.logged_in:
                     st.session_state.show_register = False
                     with open('user2.json','r', encoding="utf-8") as file:
                         data = json.load(file)
+                        
                     data[new_username] = hash_password(new_password) # записываем нового пользователя 
-                    
-                    
+                   
                     
                     # Запись в базу нового пользователя (уже обновляем базу)
                     with open('user2.json','w', encoding="utf-8") as file:
@@ -154,10 +155,10 @@ times2 = []
 for user in times:
     if st.session_state.username == user["username"]:
         for j in user["time"]:
-            times2.append(j)   
+            times2.append(j)  
+titles.append(title)             
 print(f"Len of posts {list(set(seen))}")
-print(f"Len of titles {list(set(titles))}")   
-print(f"Len of times {list(set(times2))}")                    
+print(f"Len of titles {list(set(titles))}")                    
 for post in range(len(list(set(seen)))):   
     #tit = st.text(list(set(titles))[post])        
     #pss = st.text_area(f"Post{post},Time: {times2[post]}",seen[post])                
