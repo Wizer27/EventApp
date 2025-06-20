@@ -678,7 +678,20 @@ class Second(Screen):
                     if n in j:
                         all_cords.append(j)
         print("Все кординаты")
-        print(list(set(all_cords)))                
+        cr = list(set(all_cords))
+        
+        for i in range(len(cr)):
+            cr[i] = str(cr[i]).split(',')
+        lats = []
+        lons = []    
+        for i in cr:
+            for j in range(len(i)):
+                lats.append(float(i[0]))
+                lons.append(float(i[1]))
+        lats = list(set(lats))
+        lons = list(set(lons))        
+        print(lats)
+        print(lons)                 
         marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
         marker2 = MapMarker(lat = 55.7523,lon = 37.616,source = "Images/mr2.png")
         self.mapview.add_marker(marker)
