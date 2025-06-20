@@ -604,7 +604,7 @@ class ScreenMain(Screen):
             places_music = find_restaurant(c[0],c[1])
             text += "RESTAURANTS:" + '\n'
             for place in places_music:
-                text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n' 
+                text += f"{place['name']} | Координаты: {place['lat']}, {place['lon']}" + '\n'
         if self.spinner.text == "Клубы/Развлечения":
             parks = find_events(c[0],c[1],2000)
             text += "CLUBS/EVENTS:" + '\n'
@@ -666,12 +666,24 @@ class Second(Screen):
             dt = json.load(file)
         username = App.get_running_app().current_user    
         c = dt[username]  
-        #print("Вот то что ты искал так давно")
-        print(c)
+        c =  str(c).split(":")
+        for i in range(len(c)):
+            c[i] = str(c[i]).split('\n')
+        print(c)    
+        nums = '0123456789'
+        all_cords = []
+        for i in c:
+            for j in i:
+                for n in nums:
+                    if n in j:
+                        all_cords.append(j)
+        print("Все кординаты")
+        print(list(set(all_cords)))                
         marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
         marker2 = MapMarker(lat = 55.7523,lon = 37.616,source = "Images/mr2.png")
         self.mapview.add_marker(marker)
         self.mapview.add_marker(marker2) 
+        
     def _on_press_button_new_pasword(self, *args):
         self.manager.transition.direction = 'right'
         self.manager.current = 'main_screen'
