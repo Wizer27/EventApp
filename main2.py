@@ -617,11 +617,9 @@ class ScreenMain(Screen):
         #ПРОСТО ЗАГЛУШКА НА САМОМ ДЕЛЕ ДОЛЖЕН БЫТЬ НОРМАЛЬНЫЙ КЛЮЧ, НО ЕГО НЕТ :(    
         #######################
         #FIXME:Нужно потом сделать когда отмечаем на карте места выполнить парсинг бд но так как нормального ключа текста тоесть юзернейма нет это сделать невозможно
-        c = random.randint(1,1000)
-        data[f"text №{str(c)}"] = text
+        data[username] = text
         with open("places.json",'w') as file:
             json.dump(data,file,indent=2)
-        return text
     def show_on_map(self):
         print("Showing on map") 
         self.manager.transition.direction = 'left'
