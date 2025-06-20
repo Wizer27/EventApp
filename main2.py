@@ -646,7 +646,7 @@ class Second(Screen):
             size_hint=[1, 0.1],
             on_press=self.f,
         )
-        mapview = MapView(
+        self.mapview = MapView(
             zoom=15,
             lat=55.7522,
             lon=37.6156,
@@ -658,11 +658,7 @@ class Second(Screen):
 
         boxlayout.add_widget(button_new_pasword)
         boxlayout.add_widget(button_show)
-        marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
-        marker2 = MapMarker(lat = 55.7523,lon = 37.616,source = "Images/mr2.png")
-        mapview.add_marker(marker)
-        mapview.add_marker(marker2)
-        boxlayout.add_widget(mapview)
+        boxlayout.add_widget(self.mapview)
 
         self.add_widget(boxlayout)
     def f(self,*args):
@@ -670,8 +666,12 @@ class Second(Screen):
             dt = json.load(file)
         username = App.get_running_app().current_user    
         c = dt[username]  
-        №print("Вот то что ты искал так давно")
-        print(c) 
+        #print("Вот то что ты искал так давно")
+        print(c)
+        marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
+        marker2 = MapMarker(lat = 55.7523,lon = 37.616,source = "Images/mr2.png")
+        self.mapview.add_marker(marker)
+        self.mapview.add_marker(marker2) 
     def _on_press_button_new_pasword(self, *args):
         self.manager.transition.direction = 'right'
         self.manager.current = 'main_screen'
