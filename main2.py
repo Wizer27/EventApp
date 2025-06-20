@@ -620,6 +620,9 @@ class ScreenMain(Screen):
         data[username] = text
         with open("places.json",'w') as file:
             json.dump(data,file,indent=2)
+        with open("places.json",'r') as file:
+            sh_map = json.load(file)
+        App.get_running_app().cords = sh_map[username]
     def show_on_map(self):
         print("Showing on map") 
         self.manager.transition.direction = 'left'
@@ -637,6 +640,12 @@ class Second(Screen):
             size_hint=[1, 0.1],
             on_press=self._on_press_button_new_pasword,
         )
+        button_show = Button(
+            text="Посмотреть места ",
+            background_color=[2, 1.5, 3, 1],
+            size_hint=[1, 0.1],
+            on_press=self.f,
+        )
         mapview = MapView(
             zoom=15,
             lat=55.7522,
@@ -646,7 +655,9 @@ class Second(Screen):
         )
         
         # Добавляем маркер
+
         boxlayout.add_widget(button_new_pasword)
+        boxlayout.add_widget(button_show)
         marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
         marker2 = MapMarker(lat = 55.7523,lon = 37.616,source = "Images/mr2.png")
         mapview.add_marker(marker)
@@ -654,7 +665,13 @@ class Second(Screen):
         boxlayout.add_widget(mapview)
 
         self.add_widget(boxlayout)
-
+    def f(self,*args):
+        with open("places.json",'r') as file:
+            dt = json.load(file)
+        username = App.get_running_app().current_user    
+        c = dt[username]  
+        №print("Вот то что ты искал так давно")
+        print(c) 
     def _on_press_button_new_pasword(self, *args):
         self.manager.transition.direction = 'right'
         self.manager.current = 'main_screen'
