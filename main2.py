@@ -631,9 +631,10 @@ class ScreenMain(Screen):
 class Second(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
         boxlayout = BoxLayout(orientation="horizontal", spacing=5, padding=[10])
-
+        response = requests.get('https://ipinfo.io/json').json()
+        f = response.get('loc').split(',')
+    
         button_new_pasword = Button(
             text="<- Вернуться назад ",
             background_color=[2, 1.5, 3, 1],
@@ -648,8 +649,8 @@ class Second(Screen):
         )
         self.mapview = MapView(
             zoom=15,
-            lat=55.7522,
-            lon=37.6156,
+            lat=f[0],
+            lon=f[1],
             size = (1,1)
             
         )
@@ -661,6 +662,14 @@ class Second(Screen):
         boxlayout.add_widget(self.mapview)
 
         self.add_widget(boxlayout)
+    def get_location_by_ip(self):
+        response = requests.get('https://ipinfo.io/json').json()
+        return {
+            #'city': response.get('city'),
+            #'region': response.get('region'),
+            #'country': response.get('country'),
+            'coords': response.get('loc')  # Широта,долгота (например, "59.93,30.31")
+        }    
     def f(self,*args):
         with open("places.json",'r') as file:
             dt = json.load(file)
@@ -690,12 +699,12 @@ class Second(Screen):
                 lons.append(float(i[1]))
         lats = list(set(lats))
         lons = list(set(lons))        
-        print(lats)
-        print(lons)                 
-        marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
-        marker2 = MapMarker(lat = 55.7523,lon = 37.616,source = "Images/mr2.png")
-        self.mapview.add_marker(marker)
-        self.mapview.add_marker(marker2) 
+        for i in range(len(lats)):
+            marker = MapMarker(lat = lats[i],lon = lons[i],source = "Images/mr2.png")     
+            self.mapview.add_marker(marker)           
+        #marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
+        
+       
         
     def _on_press_button_new_pasword(self, *args):
         self.manager.transition.direction = 'right'

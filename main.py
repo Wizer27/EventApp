@@ -6,9 +6,6 @@ from geopy.geocoders import Nominatim
 def get_location_by_ip():
     response = requests.get('https://ipinfo.io/json').json()
     return {
-        #'city': response.get('city'),
-        #'region': response.get('region'),
-        #'country': response.get('country'),
         'coords': response.get('loc')  # Широта,долгота (например, "59.93,30.31")
     }
 
