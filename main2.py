@@ -389,6 +389,7 @@ class LogIn(Screen):
                 if self.username.text in users:    
                     if users[self.username.text] == hash_pass(self.password.text):
                         show_success("Успешеый вход")    
+                        App.get_running_app().current_user = self.username.text
                         self.manager.transition.direction = 'right'
                         self.manager.current = 'main_screen'
                     else:
@@ -586,6 +587,10 @@ class ScreenMain(Screen):
             
     def show_text(self):
         print("Button is working OK")
+        username = App.get_running_app().current_user
+        print("##############")
+        print(username)
+        print("##############")
         cords = get_location_by_ip()
         c = cords['coords'].split(',')
         places = find_cafe(c[0], c[1], 1000)  
