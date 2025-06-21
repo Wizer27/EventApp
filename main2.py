@@ -631,7 +631,8 @@ class ScreenMain(Screen):
 class Second(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        boxlayout = BoxLayout(orientation="horizontal", spacing=5, padding=[10])
+        boxlayout = BoxLayout(orientation="vertical", spacing=5, padding=[10])
+        map = BoxLayout(orientation="horizontal", spacing=5, padding=[10])
         response = requests.get('https://ipinfo.io/json').json()
         f = response.get('loc').split(',')
     
@@ -656,10 +657,11 @@ class Second(Screen):
         )
         
         # Добавляем маркер
-
+        map.add_widget(self.mapview)
+        boxlayout.add_widget(map)
         boxlayout.add_widget(button_new_pasword)
         boxlayout.add_widget(button_show)
-        boxlayout.add_widget(self.mapview)
+        #boxlayout.add_widget(self.mapview)
 
         self.add_widget(boxlayout)
     def get_location_by_ip(self):
