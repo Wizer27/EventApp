@@ -422,7 +422,7 @@ art = """
 
 """    
 print(art)        
-class Register(Screen):
+class Register(Screen):                            
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
         self.title = "Регистрация"
@@ -657,6 +657,7 @@ class Second(Screen):
         )
         
         # Добавляем маркер
+        self.mapview.add_marker(marker = MapMarker(lat = f[0],lon = f[1],source = "Images/hm2.png"))
         map.add_widget(self.mapview)
         boxlayout.add_widget(map)
         boxlayout.add_widget(button_new_pasword)
