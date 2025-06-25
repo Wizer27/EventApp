@@ -648,6 +648,14 @@ class Second(Screen):
             size_hint=[1, 0.1],
             on_press=self.f,
         )
+        
+        clear_but = Button(
+            text="Отчистить карту ",
+            background_color=[2, 1.5, 3, 1],
+            size_hint=[1, 0.1],
+            on_press=self.clear_map,
+        )
+        
         self.mapview = MapView(
             zoom=15,
             lat=f[0],
@@ -662,6 +670,7 @@ class Second(Screen):
         boxlayout.add_widget(map)
         boxlayout.add_widget(button_new_pasword)
         boxlayout.add_widget(button_show)
+        boxlayout.add_widget(clear_but)
         #boxlayout.add_widget(self.mapview)
 
         self.add_widget(boxlayout)
@@ -694,24 +703,34 @@ class Second(Screen):
         
         for i in range(len(cr)):
             cr[i] = str(cr[i]).split(',')
-        lats = []
-        lons = []    
+        self.lats = []
+        self.lons = []    
         for i in cr:
             for j in range(len(i)):
-                lats.append(float(i[0]))
-                lons.append(float(i[1]))
-        lats = list(set(lats))
-        lons = list(set(lons))        
-        for i in range(len(lats)):
-            marker = MapMarker(lat = lats[i],lon = lons[i],source = "Images/mr2.png")     
+                self.lats.append(float(i[0]))
+                self.lons.append(float(i[1]))
+        self.lats = list(set(self.lats))
+        self.lons = list(set(self.lons))        
+        for i in range(len(self.lats)):
+            marker = MapMarker(lat = self.lats[i],lon = self.lons[i],source = "Images/mr2.png")     
             self.mapview.add_marker(marker)           
         #marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
         
        
-        
+    def clear_map(self,*args):
+        with open("places.json",'r') as file:
+            pld = json.load(file)
+        username = App.get_running_app().current_user 
+        pld[username] = ""
+        with open("places.json",'w') as file:
+            json.dump(pld,file,indent=2) 
+        for child in self.mapview.children[:]:
+            if isinstance(child, MapMarker):
+                self.mapview.remove_widget(child)          
     def _on_press_button_new_pasword(self, *args):
         self.manager.transition.direction = 'right'
         self.manager.current = 'main_screen'
+        
 class Main(App):
     def build(self):
         sm = ScreenManager()
