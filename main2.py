@@ -663,7 +663,7 @@ class Second(Screen):
             size = (1,1)
             
         )
-        
+        self.markers = []
         # Добавляем маркер
         self.mapview.add_marker(marker = MapMarker(lat = f[0],lon = f[1],source = "Images/hm2.png"))
         map.add_widget(self.mapview)
@@ -713,7 +713,8 @@ class Second(Screen):
         self.lons = list(set(self.lons))        
         for i in range(len(self.lats)):
             marker = MapMarker(lat = self.lats[i],lon = self.lons[i],source = "Images/mr2.png")     
-            self.mapview.add_marker(marker)           
+            self.mapview.add_marker(marker)
+            self.markers.append(marker)           
         #marker = MapMarker(lat=55.7522, lon=37.6156, source="Images/mr2.png")
         
        
@@ -724,9 +725,9 @@ class Second(Screen):
         pld[username] = ""
         with open("places.json",'w') as file:
             json.dump(pld,file,indent=2) 
-        for child in self.mapview.children[:]:
-            if isinstance(child, MapMarker):
-                self.mapview.remove_widget(child)          
+        for marker in self.markers:
+            self.mapview.remove_widget(marker)  # Или remove_marker(), если доступен
+        self.markers = []         
     def _on_press_button_new_pasword(self, *args):
         self.manager.transition.direction = 'right'
         self.manager.current = 'main_screen'
