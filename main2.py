@@ -278,7 +278,7 @@ class GradientPurpleButton(Button):
 class DarkLabel(Label):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.color = (0.9, 0.9, 0.9, 1)
+        self.color = (1,1,1,1)
         self.font_size = dp(18)
         self.halign = 'center'
         self.valign = 'middle'
@@ -321,7 +321,7 @@ class LogIn(Screen):
             height=dp(50),
             background_normal='',
             background_active='',
-            foreground_color=[0.9, 0.9, 0.9, 1],
+            foreground_color=[1,1,1,1],
             background_color=[0.12, 0.12, 0.12, 1],
             padding=dp(15),
             hint_text_color=[0.6, 0.6, 0.6, 1],
@@ -336,7 +336,7 @@ class LogIn(Screen):
             height=dp(50),
             background_normal='',
             background_active='',
-            foreground_color=[0.9, 0.9, 0.9, 1],
+            foreground_color=[1,1,1,1],
             background_color=[0.12, 0.12, 0.12, 1],
             padding=dp(15),
             hint_text_color=[0.6, 0.6, 0.6, 1],
@@ -458,10 +458,10 @@ class Register(Screen):
             background_normal='',
             background_active='',
             foreground_color=[0.9, 0.9, 0.9, 1],
-            background_color=[0.12, 0.12, 0.12, 1],
+            background_color=[0.12, 0.12, 0.12, 1],#0.12, 0.12, 0.12, 1
             padding=dp(15),
-            hint_text_color=[0.6, 0.6, 0.6, 1],
-            cursor_color=[0.9, 0.9, 0.9, 1],
+            hint_text_color=[0.6, 0.6, 0.6, 1],#0.6, 0.6, 0.6, 1
+            cursor_color=[0.9, 0.9, 0.9, 1],#0.9, 0.9, 0.9, 1
             cursor_width=dp(2))
         
         self.password = TextInput(
