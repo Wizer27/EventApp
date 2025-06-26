@@ -4,7 +4,7 @@ EventApp is a mobile application for creating and managing events. It allows use
 
 📱 Key Features
 ✅ User registration & authentication
-✅ Find paces/events near by
+✅ Find places/events near by
 ✅ Event listing
 ✅ Smooth UI with animations
 ✅ Dark theme
