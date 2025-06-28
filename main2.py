@@ -613,10 +613,7 @@ class ScreenMain(Screen):
         self.scroll_label.text = text
         with open('places.json','r') as file:
             data = json.load(file)
-        #######################
-        #ПРОСТО ЗАГЛУШКА НА САМОМ ДЕЛЕ ДОЛЖЕН БЫТЬ НОРМАЛЬНЫЙ КЛЮЧ, НО ЕГО НЕТ :(    
-        #######################
-        #FIXME:Нужно потом сделать когда отмечаем на карте места выполнить парсинг бд но так как нормального ключа текста тоесть юзернейма нет это сделать невозможно
+       
         data[username] = text
         with open("places.json",'w') as file:
             json.dump(data,file,indent=2)
