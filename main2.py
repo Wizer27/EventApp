@@ -553,7 +553,7 @@ class ScreenMain(Screen):
         # Создаем ScrollView с Label внутри
         scroll = ScrollView(size_hint=(1, 1))
         self.scroll_label = DarkLabel(
-            text="Нажмите на кнопку", 
+            text="", 
             size_hint_y=None,
             halign='left',  # Выравнивание по левому краю
             valign='top',   # Выравнивание по верху
